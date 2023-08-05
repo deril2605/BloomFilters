@@ -1,3 +1,11 @@
+"""
+CS5800 - Final Project
+Exploring Bloom Filters for Username Validation in Large-Scale Systems
+Satwik Shridhar Bhandiwad (NUID: 002920338)
+Sukanya Nag (NUID: 002934094)
+Deril Raju (NUID: 002914767)
+"""
+
 from math import log
 import csv
 from sys import maxsize, argv
@@ -11,7 +19,6 @@ def load_data():
     """
     Load data from a CSV file. The file path and the hash function name are provided as command line arguments.
     This function returns the data, the desired false positive rate, and the name of the hash function to use.
-    
     """
 
     if len(argv) <= 2:
@@ -129,7 +136,7 @@ def main():
     """
     data, fp_rate, hash_function = load_data()
     print(f"Using {hash_function} for hashing")
-    # Hard coded values
+
     data_set_length = len(data)
 
     Filter = BloomFilter(data_set_length, fp_rate, hash_function)
