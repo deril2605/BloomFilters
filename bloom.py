@@ -7,20 +7,13 @@ from bitarray import bitarray
 import mmh3
 import hashlib
 
-"""
-Simple bloom filter. Based on a few hash functions
-
-"""
-
-# Hash Function
-def mult_method(item: object, hash_size: int=maxsize, seed=0):
-    return (id(item) + seed**2) % hash_size + 1
-
-
-# n = number of elements to insert
-# f = the false positive rate
-# m = number of bits in a Bloom filter
 def load_data():
+    """
+    Load data from a CSV file. The file path and the hash function name are provided as command line arguments.
+    This function returns the data, the desired false positive rate, and the name of the hash function to use.
+    
+    """
+
     if len(argv) <= 2:
         print("""
 Usage: bloom [DATABASE-PATH] [HASH-FUNCTION]
@@ -46,9 +39,17 @@ Example: ./bloom-filter db_input.csv mmh3
     return (data, fp_rate, argv[2])
 
 class BloomFilter(object):
-    # size is the max num of elements in the filter
-    # fp is the false positive probability
+    """
+    A class that represents a Bloom Filter.
+    """
+    
     def __init__(self, size, fp_rate, hash_function):
+        """
+        Initialize the Bloom Filter.
+        size is the expected number of elements.
+        fp_rate is the desired false positive rate.
+        hash_function is the name of the hash function to use.
+        """
         self.size = size
         self.fp_rate = fp_rate
         self.hash_function = hash_function
@@ -63,12 +64,21 @@ class BloomFilter(object):
     # k = number of hash functions required
 
     def bit_size(self):
+        """
+        Calculate the size of the bit array required for the Bloom Filter.
+        """
         return int(-log(self.fp_rate)*self.size/(log(2)**2))
     
     def hash_count(self):
+        """
+        Calculate the number of hash functions required for the Bloom Filter.
+        """
         return int(self.__bit_size*log(2)/self.size)
 
     def add_item(self, item):
+        """
+        Add an item to the Bloom Filter.
+        """
         for seed in range(self.__hash_count):
             if self.hash_function == "mmh3":
                 index = mmh3.hash(item, seed) % self.__bit_size
@@ -77,6 +87,9 @@ class BloomFilter(object):
             self.bit_array[index] = 1
  
     def check(self, item):
+        """
+        Check if an item is probably in the Bloom Filter.
+        """
         for seed in range(self.__hash_count):
             if self.hash_function == "mmh3":
                 index = mmh3.hash(item, seed) % self.__bit_size
@@ -87,6 +100,9 @@ class BloomFilter(object):
         return True
 
     def add_array(self, array):
+        """
+        Add all items from a numpy array to the Bloom Filter.
+        """
         try:
             for item in array.tolist():
                 self.add_item(item[0])
@@ -95,6 +111,9 @@ class BloomFilter(object):
             exit()
 
     def check(self, item):
+        """
+        Check if an item is probably in the Bloom Filter.
+        """
         for i in range(self.__hash_count):
             if self.hash_function == "mmh3":
                 index = mmh3.hash(item[0], i) % self.__bit_size
@@ -104,13 +123,10 @@ class BloomFilter(object):
                 return False
         return True
 
-
-def combined_data(arr_1, arr_2):
-    combined_data = np.column_stack((arr_1, arr_2))
-    return combined_data
-
-
 def main():
+    """
+    The main function.
+    """
     data, fp_rate, hash_function = load_data()
     print(f"Using {hash_function} for hashing")
     # Hard coded values
