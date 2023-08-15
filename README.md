@@ -1,9 +1,9 @@
 CS5800 - Final Project
 Exploring Bloom Filters for Username Validation in Large-Scale Systems
 
-Satwik Shridhar Bhandiwad (NUID: 002920338)
-Sukanya Nag (NUID: 002934094)
-Deril Raju (NUID: 002914767)
+Satwik Shridhar Bhandiwad 
+Sukanya Nag 
+Deril Raju 
 
 ==========================================================================================
 
